@@ -1,0 +1,194 @@
+[Dify]
+enable = true                           # 是否启用插件
+default-model = "客服"                   # 私聊默认使用的智能体，私聊可以用全部智能体
+need-wakeup = true                      # 私聊是否需要唤醒词
+reply-title = '[AI回复]'                 # 私聊回复内容添加抬头, 不需要就清空''
+support_agent_mode = true               # 是否支持Agent模式：
+http-proxy = ""                         # HTTP代理配置，格式为"http://代理地址:端口"，不需要则留空
+voice_reply_all = false                 # 是否总是使用语音回复，设为true则所有回复都转为语音消息
+robot-names = ["机器人", "智能助手"]      # @机器人类似@登录的微信
+commands = ["/help", "/帮助", "/list", "/智能体"]    # 可以用来显示command-tip，智能体列表
+command-tip = """
+    💬AI聊天指令：
+
+    1. 切换默认智能体
+       （将会一直保持到下次切换）：
+      - @客服 切换
+        （切换到客服智能体）
+      - @合同 切换
+        （切换到合同智能体）
+
+   2. 使用唤醒词激活智能体聊天：
+      - 小禾 消息内容
+        （使用客服智能体聊天）
+      - 小谷 消息内容
+        （使用谷歌智能体聊天）
+      - 小手 消息内容
+        （使用快手智能体聊天）
+
+   3. 使用@机器人激活默认智能体进行聊天：
+      - @（智能客服的微信id）内容
+        （@群里的智能客服微信聊天）
+      - @机器人 内容
+        （@robot-name 进行聊天）
+      - @智能助手 内容
+        （@robot-name 进行聊天）
+
+   4. 使用触发词激活相应的智能体进行聊天
+      - 分析下这个合同@合同
+       （激活合同智能体进行聊天）
+      - 这可能是啥问题？@客服
+       （激活客服智能体进行聊天）
+   
+   5. 使用/list命令显示可用智能体和默认智能体
+    """
+
+[Dify.models]
+# 智能体配置，不同的智能体接入不同的dify chatflow、agent
+# 触发词用来切换智能体或唤醒智能体
+# 唤醒词用来唤醒对应智能体，如果可用智能体中唤醒词有相同的，唤醒第一个可用智能体
+
+[Dify.models."合同"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@合同"]
+wakeup-words = ["小同"]
+description = "合同审核智能体，上传合同文档，然后要求分析合同或关注的重点。"
+
+[Dify.models."快手"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@快手"]
+wakeup-words = ["小手"]
+description = "快手绘画智能体，给出绘画要求生成4张图片。"
+
+[Dify.models."谷歌"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@谷歌"]
+wakeup-words = ["小谷"]
+description = "谷歌绘画智能体，给出绘画要求生成图片然后可以对该图片对话修改。"
+
+[Dify.models."FLUX"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@小F"]
+wakeup-words = ["小F"]
+description = "FLUX绘画智能体，给出绘画要求生成4张图片。"
+
+[Dify.models."智谱"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@智谱"]
+wakeup-words = ["小谱"]
+description = "智谱绘画智能体，给出绘画要求生成1张图片或6秒视频。"
+
+[Dify.models."换脸"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@换脸"]
+wakeup-words = ["小脸"]
+description = "换脸智能体，先发送一张需要换脸的源图片，然后再上传一张目标脸的照片。"
+
+[Dify.models."证券"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@证券"]
+wakeup-words = ["小券"]
+description = "证券分析智能体"
+
+[Dify.models."客服甲"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@小甲"]
+wakeup-words = ["小甲"]
+description = "客服甲智能体"
+
+[Dify.models."客服乙"]
+api-key = "app-xxx"
+base-url = "https://api.dify.ai/v1"
+trigger-words = ["@小乙"]
+wakeup-words = ["小乙"]
+description = "客服乙智能体"
+
+[Dify.groups]
+# 群组设置，相同类型的群聊放在一个群组下，允许使用相同的智能体组
+# 智能体组中第一个智能体，为该群组默认智能体。 @‘群组中的智能客服微信’使用默认智能体
+# 通过智能体切换命令用户可在可用智能体间切换默认智能体
+# 例如：
+#     @客服 切换   （切换默认智能体到客服智能体）
+#     @合同 切换   （切换默认智能体到合同智能体）
+# 唤醒词用来唤醒对应智能体， 如果可用智能体中唤醒词有相同的，唤醒第一个可用智能体。
+# group-names与group-ids 一一对应， 为群聊简称，用来标注改群聊id的群聊简称。
+# group-id 可以通过管理端-通讯录-群聊查询。
+# csrs 表示人工座席，返回信息中包含@@@CSRS@@@标记将发送@信息给人工座席。
+#### 注意：group-id 不可重复，不能在不同群组中同时出现 ####
+
+[Dify.groups."客服甲群"]
+group-names = ['客服甲群']
+group-ids = ['575407093@chatroom']
+models = ["客服甲"]
+csrs = ['wxid_f3b19']
+command-tip = """
+💬AI聊天指令：
+
+1. 使用唤醒词激活对应智能体聊天：
+   - 小甲 消息内容
+
+   2. 使用@机器人激活默认智能体聊天：
+      - @（智能客服的微信id）内容
+      - @机器人 内容
+      - @智能助手 内容
+
+   3. 使用触发词激活对应智能体聊天
+      - 内容 @小甲
+      - @小甲 内容
+      - 内容 @小甲 内容
+
+   4. 显示可用智能体
+      - /list
+      - /智能体
+   """
+
+[Dify.groups."客服测试群"]
+group-names = ['客服测试群']
+group-ids = ['522366361@chatroom']
+models = ["客服甲", "合同", "快手", "谷歌"]
+csrs = ['wxid_f3b19']
+command-tip = """
+💬AI聊天指令：
+
+1. 使用唤醒词激活智能体聊天：
+   - 小甲 消息内容
+
+   2. 使用@机器人进行聊天：
+      - @（智能客服的微信id）内容
+      - @机器人 内容
+      - @智能助手 内容
+
+   3. 使用触发词激活智能体聊天
+      - 内容 @客服
+      - @客服 内容
+      - 内容 @客服 内容
+   """
+
+[Dify.groups."客服乙群"]
+group-names = ['客服乙群']
+group-ids = ['5707161@chatroom']
+models = ["客服乙"]
+
+[Dify.groups."公司群"]
+group-names = ['公司群']
+group-ids = ['564988@chatroom']
+models = ["客服", "合同", "快手", "谷歌"]
+csrs = ['wxid_80mooh3b19']
+
+#[Dify.groups."公司销售群"]
+#group-names = []
+#group-ids = []
+#models = []
+#
+#[Dify.groups."公司研发群"]
+#group-names = []
+#group-ids = []
+#models = []
